@@ -31,7 +31,6 @@ func Devel(ctx context.Context, gopher *Gopher) error {
 			Packages: packages,
 		},
 		&GoVet{},
-		&GoModTidy{},
 		status.Done(),
 	)
 }
