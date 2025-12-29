@@ -34,6 +34,11 @@ func Nil(item any, formatArgs ...any) {
 	Global().Nil(item, formatArgs...)
 }
 
+// Shorthandle for [Global]().Unreachable
+func Unreachable(item any, formatArgs ...any) {
+	Global().Unreachable()
+}
+
 /*
 Handler contains the method to call when an assert fails.
 In the standard library, [testing.T] implements this interface.
@@ -79,6 +84,13 @@ func (assert *Assert) Nil(item any, formatArgs ...any) {
 		item == nil,
 		wrap("Expected nil. Got: %v", item),
 		formatArgs...,
+	)
+}
+
+func (assert *Assert) Unreachable() {
+	assert.helper(
+		false,
+		wrap("Unreachable code reached."),
 	)
 }
 
