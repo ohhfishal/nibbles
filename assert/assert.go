@@ -87,10 +87,16 @@ func (assert *Assert) Nil(item any, formatArgs ...any) {
 	)
 }
 
-func (assert *Assert) Unreachable() {
+func (assert *Assert) Unreachable(formatArgs ...any) {
+	if len(formatArgs) != 0 {
+		str, ok := formatArgs[0].(string)
+		assert.True(ok, "Unreachable called with first arg not a string: %T", formatArgs[0])
+		formatArgs[0] = "Unreachable code reached: " + str
+	}
 	assert.helper(
 		false,
 		wrap("Unreachable code reached."),
+		formatArgs...,
 	)
 }
 
