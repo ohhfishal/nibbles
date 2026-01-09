@@ -84,4 +84,5 @@ func ExampleAssert_True() {
 	assert := assert.With(nil)
 	assert.True(true, "Unreachable")
 	assert.True(1 == 2, "1 does not equal 2")
+	assert.Unreachable("TSET")
 }

@@ -35,8 +35,8 @@ func Nil(item any, formatArgs ...any) {
 }
 
 // Shorthandle for [Global]().Unreachable
-func Unreachable() {
-	Global().Unreachable()
+func Unreachable(args ...any) {
+	Global().Unreachable(args...)
 }
 
 /*
