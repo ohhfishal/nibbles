@@ -39,6 +39,11 @@ func Unreachable(args ...any) {
 	Global().Unreachable(args...)
 }
 
+// Shorthandle for [Global]().NotImplemented
+func NotImplemented(msg string) {
+	Global().NotImplemented(msg)
+}
+
 /*
 Handler contains the method to call when an assert fails.
 In the standard library, [testing.T] implements this interface.
@@ -87,6 +92,7 @@ func (assert *Assert) Nil(item any, formatArgs ...any) {
 	)
 }
 
+// Always asserts. Used to denote cases that should never occur.
 func (assert *Assert) Unreachable(formatArgs ...any) {
 	if len(formatArgs) != 0 {
 		str, ok := formatArgs[0].(string)
@@ -98,6 +104,15 @@ func (assert *Assert) Unreachable(formatArgs ...any) {
 		wrap("Unreachable code reached."),
 		formatArgs...,
 	)
+}
+
+// Always asserts. Used to denote code that is a work in progress, such as for inital stage of TDD.
+func (assert *Assert) NotImplemented(msg string) {
+	if msg == "" {
+		assert.Unreachable("Not Implemented")
+	} else {
+		assert.Unreachable("Not Implemented: %s", msg)
+	}
 }
 
 type message struct {
