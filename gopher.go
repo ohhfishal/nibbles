@@ -1,4 +1,4 @@
-//go:build gopher
+//go:build ignore && gopher
 
 package main
 
@@ -12,6 +12,7 @@ import (
 
 var packages = []string{
 	"./assert",
+	"./log",
 }
 
 // Devel builds the gopher binary then runs it
@@ -31,6 +32,8 @@ func Devel(ctx context.Context, gopher *Gopher) error {
 			Packages: packages,
 		},
 		&GoVet{},
+		&GoModTidy{},
+		ExecCommand("go", "run", "."),
 		status.Done(),
 	)
 }
