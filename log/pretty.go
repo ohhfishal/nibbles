@@ -3,6 +3,7 @@ package log
 import (
 	"context"
 	"fmt"
+	"github.com/ohhfishal/nibbles/color"
 	"io"
 	"log/slog"
 	"strings"
@@ -10,6 +11,22 @@ import (
 )
 
 var _ slog.Handler = &PrettyHandler{}
+
+const TimeFormat = time.DateTime
+
+var (
+	debug = color.String(color.Purple, "[DEBUG]")
+	info  = color.String(color.Green, "[INFO] ")
+	warn  = color.String(color.Yellow, "[WARN] ")
+	_err  = color.String(color.Red, "[ERROR]")
+)
+
+var defaultColors = []string{
+	debug, debug, debug, debug,
+	info, info, info, info,
+	warn, warn, warn, warn,
+	_err,
+}
 
 type PrettyHandler struct {
 	stdout io.Writer
@@ -37,8 +54,8 @@ func (handler *PrettyHandler) Enabled(ctx context.Context, level slog.Level) boo
 }
 func (handler *PrettyHandler) Handle(ctx context.Context, record slog.Record) error {
 	if _, err := fmt.Fprint(handler.stdout, strings.Join([]string{
-		record.Time.Format(time.DateTime),
-		record.Level.String(),
+		record.Time.Format(TimeFormat),
+		handler.format(record.Level),
 		record.Message,
 	}, " ",
 	)); err != nil {
@@ -62,6 +79,7 @@ func (handler PrettyHandler) clone() *PrettyHandler {
 	return &PrettyHandler{
 		stdout: handler.stdout,
 		opts:   handler.opts,
+		attrs:  handler.attrs,
 	}
 }
 
@@ -77,4 +95,8 @@ func (handler *PrettyHandler) WithAttrs(attrs []slog.Attr) slog.Handler {
 func (handler *PrettyHandler) WithGroup(name string) slog.Handler {
 	panic("not implemented: groups")
 	// return handler.textHandler.WithGroup(name)
+}
+
+func (handler *PrettyHandler) format(level slog.Level) string {
+	return defaultColors[max(0, min(len(defaultColors)-1, (int)(level)+4))]
 }

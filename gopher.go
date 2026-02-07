@@ -12,6 +12,7 @@ import (
 
 var packages = []string{
 	"./assert",
+	"./color",
 	"./log",
 }
 
